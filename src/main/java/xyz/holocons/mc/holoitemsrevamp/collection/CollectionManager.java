@@ -89,6 +89,7 @@ import xyz.holocons.mc.holoitemsrevamp.collection.stars3.AragamiOga;
 import xyz.holocons.mc.holoitemsrevamp.collection.stars3.KageyamaShien;
 import xyz.holocons.mc.holoitemsrevamp.collection.stars3.Stars3Collection;
 import xyz.holocons.mc.holoitemsrevamp.item.MagnetBook;
+import xyz.holocons.mc.holoitemsrevamp.item.PlowItem;
 import xyz.holocons.mc.holoitemsrevamp.item.TideRiderItem;
 
 public class CollectionManager {
@@ -153,7 +154,9 @@ public class CollectionManager {
         var haato = new AkaiHaato();
         var aki = new AkiRosenthal();
         var matsuri = new NatsuiroMatsuri();
-        var fubuki = new ShirakamiFubuki();
+        var fubuki = new ShirakamiFubuki(
+            new PlowItem(plugin)
+        );
         var mel = new YozoraMel();
 
         var aqua = new MinatoAqua();

@@ -19,6 +19,7 @@ import it.unimi.dsi.fastutil.Pair;
 import net.kyori.adventure.text.Component;
 import xyz.holocons.mc.holoitemsrevamp.HoloItemsRevamp;
 import xyz.holocons.mc.holoitemsrevamp.enchantment.Magnet;
+import xyz.holocons.mc.holoitemsrevamp.enchantment.Plow;
 import xyz.holocons.mc.holoitemsrevamp.enchantment.TideRider;
 
 public class EnchantManager {
@@ -105,7 +106,8 @@ public class EnchantManager {
     private static Set<CustomEnchantment> buildCustomEnchantments(HoloItemsRevamp plugin) {
         return Set.of(
             new Magnet(plugin),
-            new TideRider(plugin)
+            new TideRider(plugin),
+            new Plow(plugin)
         );
     }
 }
