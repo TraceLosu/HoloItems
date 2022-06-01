@@ -1,5 +1,16 @@
 package xyz.holocons.mc.holoitemsrevamp.enchant;
 
+import it.unimi.dsi.fastutil.Pair;
+import net.kyori.adventure.text.Component;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import xyz.holocons.mc.holoitemsrevamp.HoloItemsRevamp;
+import xyz.holocons.mc.holoitemsrevamp.enchantment.Magnet;
+import xyz.holocons.mc.holoitemsrevamp.enchantment.TideRider;
+import xyz.holocons.mc.holoitemsrevamp.enchantment.Timefall;
+
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -9,17 +20,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import it.unimi.dsi.fastutil.Pair;
-import net.kyori.adventure.text.Component;
-import xyz.holocons.mc.holoitemsrevamp.HoloItemsRevamp;
-import xyz.holocons.mc.holoitemsrevamp.enchantment.Magnet;
-import xyz.holocons.mc.holoitemsrevamp.enchantment.TideRider;
 
 public class EnchantManager {
 
@@ -82,7 +82,7 @@ public class EnchantManager {
         final var oldLore = itemStack.lore();
         if (oldLore != null) {
             final var newLore = oldLore.stream()
-                .filter(loreComponent -> !customEnchantmentDisplayNames.values().contains(loreComponent))
+                .filter(loreComponent -> !customEnchantmentDisplayNames.containsValue(loreComponent))
                 .toList();
             itemStack.lore(newLore.isEmpty() ? null : newLore);
         }
@@ -105,7 +105,8 @@ public class EnchantManager {
     private static Set<CustomEnchantment> buildCustomEnchantments(HoloItemsRevamp plugin) {
         return Set.of(
             new Magnet(plugin),
-            new TideRider(plugin)
+            new TideRider(plugin),
+            new Timefall(plugin)
         );
     }
 }
