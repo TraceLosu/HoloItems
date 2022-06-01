@@ -7,6 +7,7 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ThrowableProjectile;
 import org.bukkit.event.EventHandler;
@@ -15,6 +16,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -23,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.holocons.mc.holoitemsrevamp.HoloItemsRevamp;
 import xyz.holocons.mc.holoitemsrevamp.ability.BlockBreak;
 import xyz.holocons.mc.holoitemsrevamp.ability.PlayerInteract;
+import xyz.holocons.mc.holoitemsrevamp.ability.PlayerToggleSneak;
 import xyz.holocons.mc.holoitemsrevamp.ability.ProjectileLaunch;
 
 import java.util.Map;
@@ -215,6 +218,36 @@ public class EnchantListener implements Listener {
 
         });
     }
+
+    /**
+     * Handles PlayerToggleSneak enchantments.
+     * Only does armor slots for now.
+     *
+     * @param event The ProjectileLaunchEvent
+     */
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
+        final var player = event.getPlayer();
+        final var inventory = player.getInventory();
+
+        for (int i = 0; i < inventory.getArmorContents().length; i++) {
+            ItemStack item =  player.getInventory().getArmorContents()[i];
+
+            if (item == null){
+                return;
+            }
+
+            item.getEnchantments().keySet().forEach(enchantment -> {
+                if (enchantment instanceof PlayerToggleSneak ability) {
+                    ability.run(event, item);
+                }
+            });
+        }
+
+
+    }
+
+
 
     /**
      * Combines custom enchantments from two items while handling conflicts and levels.
