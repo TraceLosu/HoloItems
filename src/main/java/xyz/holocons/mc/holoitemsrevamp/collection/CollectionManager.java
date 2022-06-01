@@ -1,71 +1,20 @@
 package xyz.holocons.mc.holoitemsrevamp.collection;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import com.strangeone101.holoitemsapi.CustomItem;
-
 import xyz.holocons.mc.holoitemsrevamp.HoloItemsRevamp;
-import xyz.holocons.mc.holoitemsrevamp.collection.en1.EN1Collection;
-import xyz.holocons.mc.holoitemsrevamp.collection.en1.GawrGura;
-import xyz.holocons.mc.holoitemsrevamp.collection.en1.IRyS;
-import xyz.holocons.mc.holoitemsrevamp.collection.en1.MoriCalliope;
-import xyz.holocons.mc.holoitemsrevamp.collection.en1.NinomaeInanis;
-import xyz.holocons.mc.holoitemsrevamp.collection.en1.TakanashiKiara;
-import xyz.holocons.mc.holoitemsrevamp.collection.en1.WatsonAmelia;
-import xyz.holocons.mc.holoitemsrevamp.collection.en2.CeresFauna;
-import xyz.holocons.mc.holoitemsrevamp.collection.en2.EN2Collection;
-import xyz.holocons.mc.holoitemsrevamp.collection.en2.HakosBaelz;
-import xyz.holocons.mc.holoitemsrevamp.collection.en2.NanashiMumei;
-import xyz.holocons.mc.holoitemsrevamp.collection.en2.OuroKronii;
-import xyz.holocons.mc.holoitemsrevamp.collection.en2.TsukumoSana;
+import xyz.holocons.mc.holoitemsrevamp.collection.en1.*;
+import xyz.holocons.mc.holoitemsrevamp.collection.en2.*;
 import xyz.holocons.mc.holoitemsrevamp.collection.gamers.GamersCollection;
 import xyz.holocons.mc.holoitemsrevamp.collection.gamers.InugamiKorone;
 import xyz.holocons.mc.holoitemsrevamp.collection.gamers.NekomataOkayu;
 import xyz.holocons.mc.holoitemsrevamp.collection.gamers.OokamiMio;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen0.AZKi;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen0.Gen0Collection;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen0.HoshimachiSuisei;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen0.Roboco;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen0.SakuraMiko;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen0.TokinoSora;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen1.AkaiHaato;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen1.AkiRosenthal;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen1.Gen1Collection;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen1.NatsuiroMatsuri;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen1.ShirakamiFubuki;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen1.YozoraMel;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen2.Gen2Collection;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen2.MinatoAqua;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen2.MurasakiShion;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen2.NakiriAyame;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen2.OozoraSubaru;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen2.YuzukiChoco;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen3.Gen3Collection;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen3.HoushouMarine;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen3.ShiranuiFlare;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen3.ShiroganeNoel;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen3.UruhaRushia;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen3.UsadaPekora;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen4.AmaneKanata;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen4.Gen4Collection;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen4.HimemoriLuna;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen4.KiryuCoco;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen4.TokoyamiTowa;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen4.TsunomakiWatame;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen5.Gen5Collection;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen5.MomosuzuNene;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen5.OmaruPolka;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen5.ShishiroBotan;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen5.YukihanaLamy;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen6.Gen6Collection;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen6.HakuiKoyori;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen6.KazamaIroha;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen6.LaplusDarknesss;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen6.SakamataChloe;
-import xyz.holocons.mc.holoitemsrevamp.collection.gen6.TakaneLui;
+import xyz.holocons.mc.holoitemsrevamp.collection.gen0.*;
+import xyz.holocons.mc.holoitemsrevamp.collection.gen1.*;
+import xyz.holocons.mc.holoitemsrevamp.collection.gen2.*;
+import xyz.holocons.mc.holoitemsrevamp.collection.gen3.*;
+import xyz.holocons.mc.holoitemsrevamp.collection.gen4.*;
+import xyz.holocons.mc.holoitemsrevamp.collection.gen5.*;
+import xyz.holocons.mc.holoitemsrevamp.collection.gen6.*;
 import xyz.holocons.mc.holoitemsrevamp.collection.id1.AiraniIofifteen;
 import xyz.holocons.mc.holoitemsrevamp.collection.id1.AyundaRisu;
 import xyz.holocons.mc.holoitemsrevamp.collection.id1.ID1Collection;
@@ -76,11 +25,7 @@ import xyz.holocons.mc.holoitemsrevamp.collection.id2.KureijiOllie;
 import xyz.holocons.mc.holoitemsrevamp.collection.id2.PavoliaReine;
 import xyz.holocons.mc.holoitemsrevamp.collection.misc.Achan;
 import xyz.holocons.mc.holoitemsrevamp.collection.misc.MiscCollection;
-import xyz.holocons.mc.holoitemsrevamp.collection.stars1.Arurandeisu;
-import xyz.holocons.mc.holoitemsrevamp.collection.stars1.HanasakiMiyabi;
-import xyz.holocons.mc.holoitemsrevamp.collection.stars1.KanadeIzuru;
-import xyz.holocons.mc.holoitemsrevamp.collection.stars1.Rikka;
-import xyz.holocons.mc.holoitemsrevamp.collection.stars1.Stars1Collection;
+import xyz.holocons.mc.holoitemsrevamp.collection.stars1.*;
 import xyz.holocons.mc.holoitemsrevamp.collection.stars2.AstelLeda;
 import xyz.holocons.mc.holoitemsrevamp.collection.stars2.KishidoTemma;
 import xyz.holocons.mc.holoitemsrevamp.collection.stars2.Stars2Collection;
@@ -90,6 +35,12 @@ import xyz.holocons.mc.holoitemsrevamp.collection.stars3.KageyamaShien;
 import xyz.holocons.mc.holoitemsrevamp.collection.stars3.Stars3Collection;
 import xyz.holocons.mc.holoitemsrevamp.item.MagnetBook;
 import xyz.holocons.mc.holoitemsrevamp.item.TideRiderItem;
+import xyz.holocons.mc.holoitemsrevamp.item.TimeLapseItem;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class CollectionManager {
 
@@ -135,7 +86,9 @@ public class CollectionManager {
         var fauna = new CeresFauna();
         var baelz = new HakosBaelz();
         var mumei = new NanashiMumei();
-        var kronii = new OuroKronii();
+        var kronii = new OuroKronii(
+            new TimeLapseItem(plugin)
+        );
         var sana = new TsukumoSana();
 
         var korone = new InugamiKorone();
