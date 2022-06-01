@@ -90,6 +90,12 @@ import xyz.holocons.mc.holoitemsrevamp.collection.stars3.KageyamaShien;
 import xyz.holocons.mc.holoitemsrevamp.collection.stars3.Stars3Collection;
 import xyz.holocons.mc.holoitemsrevamp.item.MagnetBook;
 import xyz.holocons.mc.holoitemsrevamp.item.TideRiderItem;
+import xyz.holocons.mc.holoitemsrevamp.item.TimeLapseItem;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class CollectionManager {
 
@@ -135,7 +141,9 @@ public class CollectionManager {
         var fauna = new CeresFauna();
         var baelz = new HakosBaelz();
         var mumei = new NanashiMumei();
-        var kronii = new OuroKronii();
+        var kronii = new OuroKronii(
+            new TimeLapseItem(plugin)
+        );
         var sana = new TsukumoSana();
 
         var korone = new InugamiKorone();
