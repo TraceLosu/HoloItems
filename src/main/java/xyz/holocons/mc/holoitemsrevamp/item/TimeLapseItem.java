@@ -47,7 +47,7 @@ public class TimeLapseItem extends CustomItem implements Enchantable {
             "ABA"
         );
         recipe.setIngredient('A', Material.CLOCK);
-        recipe.setIngredient('B', Material.GOLD_BLOCK);
+        recipe.setIngredient('B', Material.COPPER_BLOCK);
         recipe.setIngredient('C', Material.BLAST_FURNACE);
         RecipeManager.registerRecipe(recipe);
     }
