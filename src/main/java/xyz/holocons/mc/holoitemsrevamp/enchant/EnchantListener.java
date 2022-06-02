@@ -223,7 +223,7 @@ public class EnchantListener implements Listener {
      * Handles PlayerToggleSneak enchantments.
      * Only does armor slots for now.
      *
-     * @param event The ProjectileLaunchEvent
+     * @param event The PlayerToggleSneakEvent
      */
     @EventHandler(ignoreCancelled = true)
     public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
