@@ -1,4 +1,4 @@
-package xyz.holocons.mc.holoitemsrevamp.ability;
+package com.strangeone101.holoitemsapi.enchantment.ability;
 
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;

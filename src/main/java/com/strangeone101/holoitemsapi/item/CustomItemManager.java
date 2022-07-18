@@ -1,5 +1,6 @@
 package com.strangeone101.holoitemsapi.item;
 
+import com.strangeone101.holoitemsapi.block.Placeable;
 import org.bukkit.inventory.ItemStack;
 
 import com.strangeone101.holoitemsapi.Keys;
@@ -16,6 +17,7 @@ public class CustomItemManager {
     private static final int INVALID_ID = 404;
 
     private static final Map<String, CustomItem> CUSTOM_ITEMS = new HashMap<>();
+    private static final Map<Short, Placeable> CUSTOM_BLOCKS = new HashMap<>();
 
     /**
      * Register a custom item
@@ -29,6 +31,12 @@ public class CustomItemManager {
 
             NEXT_ID++;
             if (NEXT_ID == INVALID_ID) NEXT_ID++;
+        }
+
+        if (item instanceof Placeable placeable) {
+            if (CUSTOM_BLOCKS.containsKey(placeable.getIdentifier()))
+                throw new IllegalArgumentException("Identifier " + placeable.getIdentifier() + " has already been registered!");
+            CUSTOM_BLOCKS.put(placeable.getIdentifier(), placeable);
         }
     }
 
@@ -63,6 +71,10 @@ public class CustomItemManager {
             return getCustomItem(id);
         }
         return null;
+    }
+
+    public static Placeable getCustomBlock(short identifier) {
+        return CUSTOM_BLOCKS.get(identifier);
     }
 
     /**

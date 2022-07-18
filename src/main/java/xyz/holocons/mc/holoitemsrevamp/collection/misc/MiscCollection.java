@@ -1,21 +1,20 @@
 package xyz.holocons.mc.holoitemsrevamp.collection.misc;
 
-import java.util.List;
-
-import org.bukkit.Material;
-import org.jetbrains.annotations.NotNull;
-
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Material;
+import org.jetbrains.annotations.NotNull;
 import xyz.holocons.mc.holoitemsrevamp.collection.Idol;
 import xyz.holocons.mc.holoitemsrevamp.collection.IdolCollection;
+
+import java.util.List;
 
 public class MiscCollection extends IdolCollection {
 
     private static final String name = "misc";
 
     public MiscCollection(Idol... idols) {
-        super(name);
+        super(name, idols);
     }
 
     @Override

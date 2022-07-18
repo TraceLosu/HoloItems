@@ -13,8 +13,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import xyz.holocons.mc.holoitemsrevamp.HoloItemsRevamp;
-import xyz.holocons.mc.holoitemsrevamp.ability.BlockPlace;
-import xyz.holocons.mc.holoitemsrevamp.ability.PlayerDeath;
+import com.strangeone101.holoitemsapi.enchantment.ability.BlockPlace;
+import com.strangeone101.holoitemsapi.enchantment.ability.PlayerDeath;
 import xyz.holocons.mc.holoitemsrevamp.integration.Integrations;
 
 public class Memento extends CustomEnchantment implements PlayerDeath, BlockPlace {
