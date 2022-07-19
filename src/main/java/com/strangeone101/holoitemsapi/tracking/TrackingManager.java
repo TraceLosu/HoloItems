@@ -54,8 +54,13 @@ public class TrackingManager {
                 UUID worldUUID;
                 try {
                     worldUUID = UUID.fromString(uidString);
-                    if (Bukkit.getWorlds().stream().map(World::getUID).noneMatch((uniqueId) -> uniqueId.equals(worldUUID)))
-                        continue; // ignore worlds that aren't loaded.
+                    if (Bukkit.getWorlds().stream().map(World::getUID).noneMatch((uniqueId) -> uniqueId.equals(worldUUID))) {
+                        plugin.getLogger().warning("World with UUID " + worldUUID + " does not exist! " +
+                            "Storing in invalid folder and discarding!");
+                        var trackedWorld = reader.nextTrackedWorld();
+                        saveInvalidWorlds(worldUUID, trackedWorld);
+                        continue;
+                    }
                 } catch (IllegalArgumentException e) {
                     reader.close();
                     throw new IOException("Unrecognized UUID!");
@@ -88,6 +93,25 @@ public class TrackingManager {
                 writer.name(entry.getKey().toString());
                 writer.value(entry.getValue());
             }
+            writer.endObject();
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void saveInvalidWorlds(UUID worldId, TrackedWorld trackedWorld) {
+        final var invalidFolder = new File(plugin.getDataFolder(), "invalid-worlds");
+        if (!invalidFolder.isDirectory())
+            invalidFolder.mkdir();
+
+        try {
+            final var file = new File(invalidFolder, worldId.toString() + ".json");
+            final var writer = new GsonWriter(file);
+
+            writer.beginObject();
+            writer.name(worldId.toString());
+            writer.value(trackedWorld);
             writer.endObject();
             writer.close();
         } catch (IOException e) {
