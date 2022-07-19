@@ -7,16 +7,17 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
+import org.bukkit.block.Container;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import xyz.holocons.mc.holoitemsrevamp.HoloItemsRevamp;
 import xyz.holocons.mc.holoitemsrevamp.Util;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class DummyBlockBlock extends CustomItem implements Placeable, BlockDispense {
 
@@ -28,13 +29,9 @@ public class DummyBlockBlock extends CustomItem implements Placeable, BlockDispe
             .decoration(TextDecoration.ITALIC, false)
     );
 
-    private final HoloItemsRevamp plugin;
-
     public DummyBlockBlock(HoloItemsRevamp plugin) {
         super(plugin, name, material, displayName, lore);
         register();
-
-        this.plugin = plugin;
     }
 
     @Override
@@ -50,31 +47,18 @@ public class DummyBlockBlock extends CustomItem implements Placeable, BlockDispe
     @Override
     public void onBreak(BlockBreakEvent event) {
         event.getPlayer().sendMessage(Component.text("You broke a custom block!"));
+        event.setDropItems(false);
 
-        // Handle custom block drops
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                var customBlockStack = buildStack(null);
-                var location = event.getBlock().getLocation();
+        var container = (Container) event.getBlock().getState();
+        var location = event.getBlock().getLocation();
+        var items = Arrays.stream(container.getInventory().getContents());
 
-                var items = location.getNearbyEntitiesByType(Item.class, 1.5, Item::canPlayerPickup);
-                var droppedCustomBlock = items.stream()
-                    .filter((item -> {
-                        var drop = item.getItemStack();
+        // Drop contents
+        items.filter(Objects::nonNull)
+            .forEach((itemStack -> container.getWorld().dropItemNaturally(location, itemStack)));
 
-                        return drop.getType() == customBlockStack.getType() && drop.hasItemMeta() &&
-                            drop.getItemMeta().displayName().equals(customBlockStack.getItemMeta().displayName());
-                    }))
-                    .findAny();
-
-                if (droppedCustomBlock.isPresent()) {
-                    droppedCustomBlock.get().setItemStack(customBlockStack);
-                } else {
-                    location.getWorld().dropItemNaturally(location, customBlockStack);
-                }
-            }
-        }.runTask(plugin);
+        // Drop custom block
+        container.getWorld().dropItemNaturally(location, buildStack(null));
     }
 
     @Override
