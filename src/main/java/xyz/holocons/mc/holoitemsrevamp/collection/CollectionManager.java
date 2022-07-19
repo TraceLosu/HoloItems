@@ -82,7 +82,7 @@ import xyz.holocons.mc.holoitemsrevamp.collection.stars2.YukokuRoberu;
 import xyz.holocons.mc.holoitemsrevamp.collection.stars3.AragamiOga;
 import xyz.holocons.mc.holoitemsrevamp.collection.stars3.KageyamaShien;
 import xyz.holocons.mc.holoitemsrevamp.collection.stars3.Stars3Collection;
-import xyz.holocons.mc.holoitemsrevamp.item.DummyBlock;
+import xyz.holocons.mc.holoitemsrevamp.item.DummyBlockBlock;
 import xyz.holocons.mc.holoitemsrevamp.item.MagnetBook;
 import xyz.holocons.mc.holoitemsrevamp.item.MementoItem;
 import xyz.holocons.mc.holoitemsrevamp.item.TideRiderItem;
@@ -197,7 +197,7 @@ public class CollectionManager {
         var reine = new PavoliaReine();
 
         var achan = new Achan(
-            new DummyBlock(plugin)
+            new DummyBlockBlock(plugin)
         );
 
         var aruran = new Arurandeisu();

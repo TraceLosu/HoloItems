@@ -18,7 +18,7 @@ import xyz.holocons.mc.holoitemsrevamp.Util;
 
 import java.util.List;
 
-public class DummyBlock extends CustomItem implements Placeable, BlockDispense {
+public class DummyBlockBlock extends CustomItem implements Placeable, BlockDispense {
 
     private final static String name = "dummy_block";
     private final static Material material = Material.DROPPER;
@@ -30,7 +30,7 @@ public class DummyBlock extends CustomItem implements Placeable, BlockDispense {
 
     private final HoloItemsRevamp plugin;
 
-    public DummyBlock(HoloItemsRevamp plugin) {
+    public DummyBlockBlock(HoloItemsRevamp plugin) {
         super(plugin, name, material, displayName, lore);
         register();
 
