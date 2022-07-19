@@ -5,7 +5,6 @@ import com.strangeone101.holoitemsapi.block.Placeable;
 import com.strangeone101.holoitemsapi.item.CustomItemManager;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import xyz.holocons.mc.holoitemsrevamp.HoloItemsRevamp;
@@ -21,17 +20,19 @@ import java.util.UUID;
  */
 public class TrackingManager {
 
-    public static final String FILENAME = "tracker.json";
+    public static final String FILENAME = "worlds.json";
 
-    private final Map<UUID, TrackedWorld> trackedWorldMap;
     private final HoloItemsRevamp plugin;
+    private final Map<UUID, TrackedWorld> trackedWorldMap;
 
     public TrackingManager(HoloItemsRevamp plugin) {
-        this.trackedWorldMap = new Object2ObjectOpenHashMap<>();
         this.plugin = plugin;
+        this.trackedWorldMap = new Object2ObjectOpenHashMap<>();
     }
 
     public void loadTrackedWorlds() {
+        final var loadedBukkitWorlds = Bukkit.getWorlds().stream().map(World::getUID).toList();
+
         try {
             final var file = new File(plugin.getDataFolder(), FILENAME);
 
@@ -50,23 +51,22 @@ public class TrackingManager {
 
             reader.beginObject();
             while (reader.hasNext()) {
-                var uidString = reader.nextName();
+                final var uidString = reader.nextName();
+                final var trackedWorld = reader.nextTrackedWorld();
+
                 UUID worldUUID;
                 try {
                     worldUUID = UUID.fromString(uidString);
-                    if (Bukkit.getWorlds().stream().map(World::getUID).noneMatch((uniqueId) -> uniqueId.equals(worldUUID))) {
-                        plugin.getLogger().warning("World with UUID " + worldUUID + " does not exist! " +
-                            "Storing in invalid folder and discarding!");
-                        var trackedWorld = reader.nextTrackedWorld();
-                        saveInvalidWorlds(worldUUID, trackedWorld);
-                        continue;
-                    }
                 } catch (IllegalArgumentException e) {
-                    reader.close();
-                    throw new IOException("Unrecognized UUID!");
+                    worldUUID = null;
                 }
 
-                var trackedWorld = reader.nextTrackedWorld();
+                if (!loadedBukkitWorlds.contains(worldUUID)) {
+                    plugin.getLogger().warning("World with ID " + uidString +
+                        " does not exist! Storing in invalid worlds folder!");
+                    discardInvalidWorld(uidString, trackedWorld);
+                    continue;
+                }
 
                 trackedWorldMap.put(worldUUID, trackedWorld);
             }
@@ -100,17 +100,17 @@ public class TrackingManager {
         }
     }
 
-    private void saveInvalidWorlds(UUID worldId, TrackedWorld trackedWorld) {
-        final var invalidFolder = new File(plugin.getDataFolder(), "invalid-worlds");
-        if (!invalidFolder.isDirectory())
-            invalidFolder.mkdir();
+    private void discardInvalidWorld(final String worldId, final TrackedWorld trackedWorld) {
+        final var invalidWorldsFolder = new File(plugin.getDataFolder(), "invalid-worlds");
+        if (!invalidWorldsFolder.isDirectory())
+            invalidWorldsFolder.mkdir();
 
         try {
-            final var file = new File(invalidFolder, worldId.toString() + ".json");
+            final var file = new File(invalidWorldsFolder, worldId + ".json");
             final var writer = new GsonWriter(file);
 
             writer.beginObject();
-            writer.name(worldId.toString());
+            writer.name(worldId);
             writer.value(trackedWorld);
             writer.endObject();
             writer.close();
@@ -171,9 +171,5 @@ public class TrackingManager {
 
     private TrackedWorld getTrackedWorldOf(final Block block) {
         return trackedWorldMap.get(block.getWorld().getUID());
-    }
-
-    private TrackedWorld getTrackedWorldOf(final Chunk chunk) {
-        return trackedWorldMap.get(chunk.getWorld().getUID());
     }
 }
