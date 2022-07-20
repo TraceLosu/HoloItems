@@ -15,28 +15,34 @@ public class TrackedChunk {
         this.trackedBlocks = Objects.requireNonNullElseGet(trackedBlocks, Int2ShortOpenHashMap::new);
     }
 
-    protected short get(final Block block) {
-        return this.trackedBlocks.get(UtilChunk.getRelativeChunkPosition(block));
-    }
-
-    protected void add(final Block block, final short identifier) {
-        this.trackedBlocks.put(UtilChunk.getRelativeChunkPosition(block), identifier);
-    }
-
-    protected void remove(final Block block) {
-        this.trackedBlocks.remove(UtilChunk.getRelativeChunkPosition(block));
-    }
-
-    protected boolean isTracked(final Block block) {
-        return this.trackedBlocks.containsKey(UtilChunk.getRelativeChunkPosition(block));
-    }
-
-    protected boolean isEmpty() {
-        return this.trackedBlocks.isEmpty();
-    }
-
     public Int2ShortMap getTrackedBlocks() {
         return trackedBlocks;
     }
 
+    protected boolean isEmpty() {
+        return trackedBlocks.isEmpty();
+    }
+
+    protected short get(final Block block) {
+        return trackedBlocks.get(getRelativeChunkPosition(block));
+    }
+
+    protected boolean isTracked(final Block block) {
+        return trackedBlocks.containsKey(getRelativeChunkPosition(block));
+    }
+
+    protected void add(final Block block, final short identifier) {
+        trackedBlocks.put(getRelativeChunkPosition(block), identifier);
+    }
+
+    protected void remove(final Block block) {
+        trackedBlocks.remove(getRelativeChunkPosition(block));
+    }
+
+    private static int getRelativeChunkPosition(final Block block) {
+        final int relX = block.getX() & 0xF;
+        final int relZ = block.getZ() & 0xF;
+        final int relY = block.getY() & 0xFFFF;
+        return relY | relX << 16 | relZ << 24;
+    }
 }
