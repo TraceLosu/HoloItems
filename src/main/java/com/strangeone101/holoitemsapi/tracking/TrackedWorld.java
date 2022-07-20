@@ -29,26 +29,23 @@ public class TrackedWorld {
     }
 
     protected boolean isTracked(final Block block) {
-        var trackedChunk = getTrackedChunk(block);
-
-        if (trackedChunk == null)
-            return false;
-
-        return trackedChunk.isTracked(block);
+        final var trackedChunk = getTrackedChunk(block);
+        return Objects.nonNull(trackedChunk) && trackedChunk.isTracked(block);
     }
 
     protected void add(final Block block, final short identifier) {
         var trackedChunk = getTrackedChunk(block);
-
-        if (trackedChunk == null)
-            trackedChunk = initTrackedChunk(block.getChunk());
+        if (Objects.isNull(trackedChunk)) {
+            trackedChunk = new TrackedChunk(null);
+            chunkMap.put(getChunkKey(block), trackedChunk);
+        }
 
         trackedChunk.add(block, identifier);
     }
 
     protected void remove(final Block block) {
         final var trackedChunk = getTrackedChunk(block);
-        if (trackedChunk == null)
+        if (Objects.isNull(trackedChunk))
             return;
 
         trackedChunk.remove(block);
@@ -63,11 +60,5 @@ public class TrackedWorld {
 
     private static long getChunkKey(final Block block) {
         return Chunk.getChunkKey(block.getX() >> 4, block.getZ() >> 4);
-    }
-
-    protected TrackedChunk initTrackedChunk(final Chunk chunk) {
-        final TrackedChunk trackedChunk = new TrackedChunk(null);
-        chunkMap.put(chunk.getChunkKey(), trackedChunk);
-        return trackedChunk;
     }
 }
