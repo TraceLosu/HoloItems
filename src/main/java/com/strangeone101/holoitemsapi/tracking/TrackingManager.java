@@ -79,7 +79,11 @@ public class TrackingManager {
 
     public void saveTrackedWorlds() {
         try {
-            final var file = new File(plugin.getDataFolder(), FILENAME);
+            final var dataFolder = plugin.getDataFolder();
+            if (!dataFolder.isDirectory())
+                dataFolder.mkdir();
+
+            final var file = new File(dataFolder, FILENAME);
             final var writer = new GsonWriter(file);
 
             if (trackedWorldMap.isEmpty()) {
