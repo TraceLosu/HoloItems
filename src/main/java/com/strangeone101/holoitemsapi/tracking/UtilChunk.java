@@ -18,9 +18,9 @@ public class UtilChunk {
     }
 
     public static int getRelativeChunkPosition(final Block block) {
-        final int relX = (block.getX() % 16 + 16) % 16;
-        final int relZ = (block.getZ() % 16 + 16) % 16;
-        final int relY = block.getY();
-        return (relY & 0xFFFF) | ((relX & 0xFF) << 16) | ((relZ & 0xFF) << 24);
+        final int relX = block.getX() & 0xF;
+        final int relZ = block.getZ() & 0xF;
+        final int relY = block.getY() & 0xFFFF;
+        return relY | relX << 16 | relZ << 24;
     }
 }
