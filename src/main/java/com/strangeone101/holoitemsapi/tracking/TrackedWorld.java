@@ -16,12 +16,20 @@ public class TrackedWorld {
         this.chunkMap = Objects.requireNonNullElseGet(trackedChunks, Long2ObjectOpenHashMap::new);
     }
 
+    public Long2ObjectMap<TrackedChunk> getChunkMap() {
+        return chunkMap;
+    }
+
+    protected boolean isEmpty() {
+        return chunkMap.isEmpty();
+    }
+
     protected short get(final Block block) {
-        return this.getTrackedChunk(block).get(block);
+        return getTrackedChunk(block).get(block);
     }
 
     protected boolean isTracked(final Block block) {
-        var trackedChunk = this.getTrackedChunk(block);
+        var trackedChunk = getTrackedChunk(block);
 
         if (trackedChunk == null)
             return false;
@@ -30,7 +38,7 @@ public class TrackedWorld {
     }
 
     protected void add(final Block block, final short identifier) {
-        var trackedChunk = this.getTrackedChunk(block);
+        var trackedChunk = getTrackedChunk(block);
 
         if (trackedChunk == null)
             trackedChunk = initTrackedChunk(block.getChunk());
@@ -39,7 +47,7 @@ public class TrackedWorld {
     }
 
     protected void remove(final Block block) {
-        final var trackedChunk = this.getTrackedChunk(block);
+        final var trackedChunk = getTrackedChunk(block);
         if (trackedChunk == null)
             return;
 
@@ -49,25 +57,17 @@ public class TrackedWorld {
             chunkMap.remove(getChunkKey(block));
     }
 
-    protected boolean isEmpty() {
-        return chunkMap.isEmpty();
-    }
-
-    protected TrackedChunk initTrackedChunk(final Chunk chunk) {
-        final TrackedChunk trackedChunk = new TrackedChunk(null);
-        this.chunkMap.put(chunk.getChunkKey(), trackedChunk);
-        return trackedChunk;
-    }
-
-    public Long2ObjectMap<TrackedChunk> getChunkMap() {
-        return chunkMap;
-    }
-
     private TrackedChunk getTrackedChunk(final Block block) {
-        return this.chunkMap.get(getChunkKey(block));
+        return chunkMap.get(getChunkKey(block));
     }
 
     private static long getChunkKey(final Block block) {
         return Chunk.getChunkKey(block.getX() >> 4, block.getZ() >> 4);
+    }
+
+    protected TrackedChunk initTrackedChunk(final Chunk chunk) {
+        final TrackedChunk trackedChunk = new TrackedChunk(null);
+        chunkMap.put(chunk.getChunkKey(), trackedChunk);
+        return trackedChunk;
     }
 }
