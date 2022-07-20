@@ -17,11 +17,11 @@ public class TrackedWorld {
     }
 
     protected short get(final Block block) {
-        return this.getChunkOf(block).get(block);
+        return this.getTrackedChunk(block).get(block);
     }
 
     protected boolean isTracked(final Block block) {
-        var trackedChunk = this.getChunkOf(block);
+        var trackedChunk = this.getTrackedChunk(block);
 
         if (trackedChunk == null)
             return false;
@@ -30,32 +30,32 @@ public class TrackedWorld {
     }
 
     protected void add(final Block block, final short identifier) {
-        var trackedChunk = this.getChunkOf(block);
+        var trackedChunk = this.getTrackedChunk(block);
 
         if (trackedChunk == null)
-            trackedChunk = initChunk(block.getChunk());
+            trackedChunk = initTrackedChunk(block.getChunk());
 
         trackedChunk.add(block, identifier);
     }
 
     protected void remove(final Block block) {
-        final var trackedChunk = this.getChunkOf(block);
+        final var trackedChunk = this.getTrackedChunk(block);
         if (trackedChunk == null)
             return;
 
         trackedChunk.remove(block);
 
         if (trackedChunk.isEmpty())
-            chunkMap.remove(UtilChunk.getChunkKeyOfBlock(block));
+            chunkMap.remove(getChunkKey(block));
     }
 
     protected boolean isEmpty() {
         return chunkMap.isEmpty();
     }
 
-    protected TrackedChunk initChunk(final Chunk chunk) {
+    protected TrackedChunk initTrackedChunk(final Chunk chunk) {
         final TrackedChunk trackedChunk = new TrackedChunk(null);
-        this.chunkMap.put(UtilChunk.getChunkKey(chunk), trackedChunk);
+        this.chunkMap.put(chunk.getChunkKey(), trackedChunk);
         return trackedChunk;
     }
 
@@ -63,8 +63,11 @@ public class TrackedWorld {
         return chunkMap;
     }
 
-    private TrackedChunk getChunkOf(final Block block) {
-        return this.chunkMap.get(UtilChunk.getChunkKeyOfBlock(block));
+    private TrackedChunk getTrackedChunk(final Block block) {
+        return this.chunkMap.get(getChunkKey(block));
     }
 
+    private static long getChunkKey(final Block block) {
+        return Chunk.getChunkKey(block.getX() >> 4, block.getZ() >> 4);
+    }
 }
