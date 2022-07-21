@@ -45,4 +45,11 @@ public record TrackedBlock(UUID worldKey, int x, int y, int z) {
     public int hashCode() {
         return worldKey.hashCode() ^ ((y + z * 31) * 31 + x);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof TrackedBlock other
+                && this.x == other.x && this.y == other.y && this.z == other.z
+                && this.worldKey.equals(other.worldKey);
+    }
 }
