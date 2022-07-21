@@ -13,12 +13,20 @@ public record TrackedBlock(UUID worldKey, int x, int y, int z) {
         this(block.getWorld().getUID(), block.getX(), block.getY(), block.getZ());
     }
 
+    public TrackedBlock(UUID worldKey, long chunkKey, int blockKey) {
+        this(
+                worldKey,
+                (int) chunkKey << 4 | blockKey >> 16 & 0xF,
+                blockKey & 0xFFFF,
+                (int) (chunkKey >> 32) << 4 | blockKey >> 24 & 0xF);
+    }
+
     public World world() {
         return Bukkit.getWorld(worldKey);
     }
 
     public long chunkKey() {
-        return (long) (x >> 4) & 0xFFFFFFFFL | ((long) (z >> 4) & 0xFFFFFFFFL) << 32;
+        return (long) x >> 4 & 0xFFFFFFFFL | ((long) z >> 4 & 0xFFFFFFFFL) << 32;
     }
 
     public Chunk chunk() {
