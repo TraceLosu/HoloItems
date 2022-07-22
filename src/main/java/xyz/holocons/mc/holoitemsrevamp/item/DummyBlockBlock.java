@@ -47,6 +47,7 @@ public class DummyBlockBlock extends CustomItem implements BlockAbility {
     @Override
     public void onBlockPlace(BlockPlaceEvent event, BlockState blockState) {
         event.getPlayer().sendMessage(Component.text("You placed a custom block!"));
+        event.getPlayer().sendBlockChange(blockState.getLocation(), Material.BEDROCK.createBlockData());
     }
 
     @Override
