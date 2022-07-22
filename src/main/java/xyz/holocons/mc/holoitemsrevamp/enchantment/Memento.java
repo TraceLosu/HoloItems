@@ -8,16 +8,15 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import com.strangeone101.holoitemsapi.enchantment.CustomEnchantment;
+import com.strangeone101.holoitemsapi.enchantment.EnchantmentAbility;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import xyz.holocons.mc.holoitemsrevamp.HoloItemsRevamp;
-import com.strangeone101.holoitemsapi.enchantment.ability.BlockPlace;
-import com.strangeone101.holoitemsapi.enchantment.ability.PlayerDeath;
 import xyz.holocons.mc.holoitemsrevamp.integration.Integrations;
 
-public class Memento extends CustomEnchantment implements PlayerDeath, BlockPlace {
+public class Memento extends CustomEnchantment implements EnchantmentAbility {
 
     public Memento(HoloItemsRevamp plugin) {
         super(plugin, "memento");
@@ -53,7 +52,7 @@ public class Memento extends CustomEnchantment implements PlayerDeath, BlockPlac
     }
 
     @Override
-    public void run(PlayerDeathEvent event, ItemStack itemStack) {
+    public void onPlayerDeath(PlayerDeathEvent event, ItemStack itemStack) {
         final var location = event.getPlayer().getLocation();
 
         // Don't do anything if keepInv is already on for this event
@@ -74,7 +73,7 @@ public class Memento extends CustomEnchantment implements PlayerDeath, BlockPlac
     }
 
     @Override
-    public void run(BlockPlaceEvent event, ItemStack itemStack) {
+    public void onBlockPlace(BlockPlaceEvent event, ItemStack itemStack) {
         event.setCancelled(true);
     }
 }

@@ -1,8 +1,8 @@
 package xyz.holocons.mc.holoitemsrevamp.enchantment;
 
 import com.strangeone101.holoitemsapi.enchantment.CustomEnchantment;
-import com.strangeone101.holoitemsapi.enchantment.ability.PlayerInteract;
-import com.strangeone101.holoitemsapi.enchantment.ability.ProjectileLaunch;
+import com.strangeone101.holoitemsapi.enchantment.EnchantmentAbility;
+
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.holocons.mc.holoitemsrevamp.HoloItemsRevamp;
 import xyz.holocons.mc.holoitemsrevamp.integration.Integrations;
 
-public class TideRider extends CustomEnchantment implements PlayerInteract, ProjectileLaunch {
+public class TideRider extends CustomEnchantment implements EnchantmentAbility {
 
     private final HoloItemsRevamp plugin;
 
@@ -57,7 +57,7 @@ public class TideRider extends CustomEnchantment implements PlayerInteract, Proj
     }
 
     @Override
-    public void run(PlayerInteractEvent event, ItemStack itemStack) {
+    public void onPlayerInteract(PlayerInteractEvent event, ItemStack itemStack) {
         final var player = event.getPlayer();
         final var world = player.getWorld();
 
@@ -135,7 +135,7 @@ public class TideRider extends CustomEnchantment implements PlayerInteract, Proj
     }
 
     @Override
-    public void run(ProjectileLaunchEvent event, ItemStack itemStack) {
+    public void onProjectileLaunch(ProjectileLaunchEvent event, ItemStack itemStack) {
         event.setCancelled(true);
     }
 }

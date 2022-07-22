@@ -1,6 +1,6 @@
 package com.strangeone101.holoitemsapi.tracking;
 
-import com.strangeone101.holoitemsapi.block.Placeable;
+import com.strangeone101.holoitemsapi.item.BlockAbility;
 import com.strangeone101.holoitemsapi.item.CustomItemManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -12,44 +12,41 @@ import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import xyz.holocons.mc.holoitemsrevamp.HoloItemsRevamp;
 
-public class TrackListener implements Listener {
+public class TrackingListener implements Listener {
 
     private final HoloItemsRevamp plugin;
 
-    public TrackListener(HoloItemsRevamp plugin) {
+    public TrackingListener(HoloItemsRevamp plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onPlace(final BlockPlaceEvent event) {
-        var itemStack = event.getItemInHand();
+    public void onBlockPlace(final BlockPlaceEvent event) {
+        final var itemStack = event.getItemInHand();
 
-        if (!CustomItemManager.isCustomItem(itemStack))
+        if (!(CustomItemManager.getCustomItem(itemStack) instanceof BlockAbility ability))
             return;
 
-        if (!(CustomItemManager.getCustomItem(itemStack) instanceof Placeable placeable))
-            return;
-
-        plugin.getTrackingManager().track(event.getBlockPlaced(), placeable.getIdentifier());
+        plugin.getTrackingManager().track(event.getBlockPlaced(), ability.getIdentifier());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onBreak(final BlockBreakEvent event) {
+    public void onBlockBreak(final BlockBreakEvent event) {
         plugin.getTrackingManager().untrack(event.getBlock());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onExplode(final BlockExplodeEvent event) {
+    public void onBlockExplode(final BlockExplodeEvent event) {
         event.blockList().forEach(plugin.getTrackingManager()::untrack);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onBurn(final BlockBurnEvent event) {
+    public void onBlockBurn(final BlockBurnEvent event) {
         plugin.getTrackingManager().untrack(event.getBlock());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onFade(final BlockFadeEvent event) {
+    public void onBlockFade(final BlockFadeEvent event) {
         plugin.getTrackingManager().untrack(event.getBlock());
     }
 

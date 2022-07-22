@@ -1,13 +1,12 @@
-package com.strangeone101.holoitemsapi.block;
+package com.strangeone101.holoitemsapi.item;
 
-import com.strangeone101.holoitemsapi.block.ability.BlockDispense;
-import com.strangeone101.holoitemsapi.item.CustomItemManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+
 import xyz.holocons.mc.holoitemsrevamp.HoloItemsRevamp;
 
 public class BlockListener implements Listener {
@@ -22,13 +21,11 @@ public class BlockListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         var itemStack = event.getItemInHand();
 
-        if (!CustomItemManager.isCustomItem(itemStack))
+        if (!(CustomItemManager.getCustomItem(itemStack) instanceof BlockAbility ability))
             return;
 
-        if (!(CustomItemManager.getCustomItem(itemStack) instanceof Placeable placeable))
-            return;
-
-        placeable.onPlace(event);
+        final var block = event.getBlock();
+        ability.onBlockPlace(event, block);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -36,8 +33,9 @@ public class BlockListener implements Listener {
         if (!plugin.getTrackingManager().isTracked(event.getBlock()))
             return;
 
-        var placeable = plugin.getTrackingManager().getCustomBlock(event.getBlock());
-        placeable.onBreak(event);
+        final var ability = plugin.getTrackingManager().getCustomBlock(event.getBlock());
+        final var block = event.getBlock();
+        ability.onBlockBreak(event, block);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -45,9 +43,8 @@ public class BlockListener implements Listener {
         if (!plugin.getTrackingManager().isTracked(event.getBlock()))
             return;
 
-        var customBlock = plugin.getTrackingManager().getCustomBlock(event.getBlock());
-
-        if (customBlock instanceof BlockDispense dispensable)
-            dispensable.onDispense(event);
+        final var ability = plugin.getTrackingManager().getCustomBlock(event.getBlock());
+        final var block = event.getBlock();
+        ability.onBlockDispense(event, block);
     }
 }

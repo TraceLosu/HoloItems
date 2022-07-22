@@ -1,7 +1,7 @@
 package com.strangeone101.holoitemsapi.tracking;
 
 import com.google.gson.stream.JsonToken;
-import com.strangeone101.holoitemsapi.block.Placeable;
+import com.strangeone101.holoitemsapi.item.BlockAbility;
 import com.strangeone101.holoitemsapi.item.CustomItemManager;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.bukkit.Bukkit;
@@ -163,7 +163,7 @@ public class TrackingManager {
         return trackedWorld.get(block);
     }
 
-    public Placeable getCustomBlock(final Block block) {
+    public BlockAbility getCustomBlock(final Block block) {
         return CustomItemManager.getCustomBlock(getIdentifier(block));
     }
 

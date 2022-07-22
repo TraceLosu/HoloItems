@@ -2,7 +2,8 @@ package xyz.holocons.mc.holoitemsrevamp.enchantment;
 
 import com.destroystokyo.paper.MaterialTags;
 import com.strangeone101.holoitemsapi.enchantment.CustomEnchantment;
-import com.strangeone101.holoitemsapi.enchantment.ability.BlockBreak;
+import com.strangeone101.holoitemsapi.enchantment.EnchantmentAbility;
+
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.holocons.mc.holoitemsrevamp.HoloItemsRevamp;
 import xyz.holocons.mc.holoitemsrevamp.integration.Integrations;
 
-public class Magnet extends CustomEnchantment implements BlockBreak {
+public class Magnet extends CustomEnchantment implements EnchantmentAbility {
 
     private final HoloItemsRevamp plugin;
 
@@ -55,7 +56,7 @@ public class Magnet extends CustomEnchantment implements BlockBreak {
     }
 
     @Override
-    public void run(BlockBreakEvent event, ItemStack itemStack) {
+    public void onBlockBreak(BlockBreakEvent event, ItemStack itemStack) {
         final var location = event.getBlock().getLocation().toCenterLocation();
         final var player = event.getPlayer();
 
