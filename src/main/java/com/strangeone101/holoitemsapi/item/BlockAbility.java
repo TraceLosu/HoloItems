@@ -1,11 +1,12 @@
 package com.strangeone101.holoitemsapi.item;
 
-import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+
+import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 
 /**
  * An interface that represents an enchantment belonging to a custom item that
@@ -13,19 +14,19 @@ import org.bukkit.event.world.ChunkUnloadEvent;
  */
 public interface BlockAbility {
 
-    default void onBlockBreak(BlockBreakEvent event, Block block) {
+    default void onBlockBreak(BlockBreakEvent event, BlockState blockState) {
     }
 
-    default void onBlockDispense(BlockDispenseEvent event, Block block) {
+    default void onBlockDispense(BlockDispenseEvent event, BlockState blockState) {
     }
 
-    default void onBlockPlace(BlockPlaceEvent event, Block block) {
+    default void onBlockPlace(BlockPlaceEvent event, BlockState blockState) {
     }
 
-    default void onChunkLoad(ChunkLoadEvent event, Block block) {
+    default void onInventoryClose(InventoryCloseEvent event, BlockState blockState) {
     }
 
-    default void onChunkUnload(ChunkUnloadEvent event, Block block) {
+    default void onPlayerChunkLoad(PlayerChunkLoadEvent event, BlockState blockState) {
     }
 
     short getIdentifier();
