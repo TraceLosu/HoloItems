@@ -91,6 +91,7 @@ import xyz.holocons.mc.holoitemsrevamp.collection.stars3.Stars3Collection;
 import xyz.holocons.mc.holoitemsrevamp.item.MagnetBook;
 import xyz.holocons.mc.holoitemsrevamp.item.MementoItem;
 import xyz.holocons.mc.holoitemsrevamp.item.TideRiderItem;
+import xyz.holocons.mc.holoitemsrevamp.item.UnlimitedKrisWorksItem;
 
 public class CollectionManager {
 
@@ -192,7 +193,9 @@ public class CollectionManager {
         var risu = new AyundaRisu();
         var moona = new MoonaHoshinova();
 
-        var anya = new AnyaMelfissa();
+        var anya = new AnyaMelfissa(
+          new UnlimitedKrisWorksItem(plugin)
+        );
         var ollie = new KureijiOllie();
         var reine = new PavoliaReine();
 
