@@ -6,6 +6,8 @@ import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.Nullable;
 
+import com.strangeone101.holoitemsapi.item.BlockAbility;
+
 import java.util.Objects;
 
 public class TrackedWorld {
@@ -24,7 +26,7 @@ public class TrackedWorld {
         return chunkMap.isEmpty();
     }
 
-    protected short get(final Block block) {
+    protected BlockAbility get(final Block block) {
         return getTrackedChunk(block).get(block);
     }
 
@@ -33,14 +35,14 @@ public class TrackedWorld {
         return Objects.nonNull(trackedChunk) && trackedChunk.isTracked(block);
     }
 
-    protected void add(final Block block, final short identifier) {
+    protected void add(final Block block, final BlockAbility ability) {
         var trackedChunk = getTrackedChunk(block);
         if (Objects.isNull(trackedChunk)) {
             trackedChunk = new TrackedChunk(null);
             chunkMap.put(getChunkKey(block), trackedChunk);
         }
 
-        trackedChunk.add(block, identifier);
+        trackedChunk.add(block, ability);
     }
 
     protected void remove(final Block block) {

@@ -2,7 +2,10 @@ package com.strangeone101.holoitemsapi.tracking;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
-import it.unimi.dsi.fastutil.ints.Int2ShortOpenHashMap;
+import com.strangeone101.holoitemsapi.item.BlockAbility;
+import com.strangeone101.holoitemsapi.item.CustomItemManager;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 
 import java.io.BufferedReader;
@@ -46,14 +49,14 @@ public class GsonReader extends JsonReader {
             return null;
         }
 
-        var trackedBlocks = new Int2ShortOpenHashMap();
+        var trackedBlocks = new Int2ObjectOpenHashMap<BlockAbility>();
 
         beginObject();
         while (hasNext()) {
             try {
-                var cords = Integer.parseInt(nextName());
-                var identifier = Short.parseShort(nextString());
-                trackedBlocks.put(cords, identifier);
+                var blockKey = Integer.parseInt(nextName());
+                var ability = CustomItemManager.getCustomBlock(Short.parseShort(nextString()));
+                trackedBlocks.put(blockKey, ability);
             } catch (NumberFormatException e) {
                 throw new IOException("Invalid number format!");
             }

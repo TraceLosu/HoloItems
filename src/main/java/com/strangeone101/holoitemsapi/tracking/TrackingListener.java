@@ -27,7 +27,7 @@ public class TrackingListener implements Listener {
         if (!(CustomItemManager.getCustomItem(itemStack) instanceof BlockAbility ability))
             return;
 
-        plugin.getTrackingManager().track(event.getBlockPlaced(), ability.getIdentifier());
+        plugin.getTrackingManager().track(event.getBlockPlaced(), ability);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

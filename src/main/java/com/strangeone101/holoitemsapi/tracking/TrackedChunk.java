@@ -1,21 +1,23 @@
 package com.strangeone101.holoitemsapi.tracking;
 
-import it.unimi.dsi.fastutil.ints.Int2ShortMap;
-import it.unimi.dsi.fastutil.ints.Int2ShortOpenHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.Nullable;
+
+import com.strangeone101.holoitemsapi.item.BlockAbility;
 
 import java.util.Objects;
 
 public class TrackedChunk {
 
-    private final Int2ShortMap trackedBlocks;
+    private final Int2ObjectMap<BlockAbility> trackedBlocks;
 
-    protected TrackedChunk(@Nullable final Int2ShortMap trackedBlocks) {
-        this.trackedBlocks = Objects.requireNonNullElseGet(trackedBlocks, Int2ShortOpenHashMap::new);
+    protected TrackedChunk(@Nullable final Int2ObjectMap<BlockAbility> trackedBlocks) {
+        this.trackedBlocks = Objects.requireNonNullElseGet(trackedBlocks, Int2ObjectOpenHashMap::new);
     }
 
-    public Int2ShortMap getTrackedBlocks() {
+    public Int2ObjectMap<BlockAbility> getTrackedBlocks() {
         return trackedBlocks;
     }
 
@@ -23,7 +25,7 @@ public class TrackedChunk {
         return trackedBlocks.isEmpty();
     }
 
-    protected short get(final Block block) {
+    protected BlockAbility get(final Block block) {
         return trackedBlocks.get(getRelativeChunkPosition(block));
     }
 
@@ -31,8 +33,8 @@ public class TrackedChunk {
         return trackedBlocks.containsKey(getRelativeChunkPosition(block));
     }
 
-    protected void add(final Block block, final short identifier) {
-        trackedBlocks.put(getRelativeChunkPosition(block), identifier);
+    protected void add(final Block block, final BlockAbility ability) {
+        trackedBlocks.put(getRelativeChunkPosition(block), ability);
     }
 
     protected void remove(final Block block) {

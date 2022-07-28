@@ -2,7 +2,6 @@ package com.strangeone101.holoitemsapi.tracking;
 
 import com.google.gson.stream.JsonToken;
 import com.strangeone101.holoitemsapi.item.BlockAbility;
-import com.strangeone101.holoitemsapi.item.CustomItemManager;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -123,13 +122,13 @@ public class TrackingManager {
         }
     }
 
-    public void track(final Block block, final short identifier) {
+    public void track(final Block block, final BlockAbility ability) {
         var trackedWorld = getTrackedWorldOf(block);
 
         if (trackedWorld == null)
             trackedWorld = initWorld(block.getWorld());
 
-        trackedWorld.add(block, identifier);
+        trackedWorld.add(block, ability);
     }
 
     public void untrack(final Block block) {
@@ -144,9 +143,9 @@ public class TrackingManager {
     }
 
     public void move(final Block from, final Block to) {
-        var identifier = getIdentifier(from);
+        var ability = getCustomBlock(from);
         untrack(from);
-        track(to, identifier);
+        track(to, ability);
     }
 
     public boolean isTracked(final Block block) {
@@ -158,13 +157,9 @@ public class TrackingManager {
         return trackedWorld.isTracked(block);
     }
 
-    public short getIdentifier(final Block block) {
+    public BlockAbility getCustomBlock(final Block block) {
         var trackedWorld = getTrackedWorldOf(block);
         return trackedWorld.get(block);
-    }
-
-    public BlockAbility getCustomBlock(final Block block) {
-        return CustomItemManager.getCustomBlock(getIdentifier(block));
     }
 
     private TrackedWorld initWorld(final World world) {

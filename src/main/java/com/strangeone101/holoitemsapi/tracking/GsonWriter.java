@@ -35,9 +35,9 @@ public class GsonWriter extends JsonWriter {
         }
 
         beginObject();
-        for (var entry : value.getTrackedBlocks().int2ShortEntrySet()) {
+        for (var entry : value.getTrackedBlocks().int2ObjectEntrySet()) {
             name(String.valueOf(entry.getIntKey()));
-            value(entry.getShortValue());
+            value(entry.getValue().getIdentifier());
         }
         endObject();
     }
