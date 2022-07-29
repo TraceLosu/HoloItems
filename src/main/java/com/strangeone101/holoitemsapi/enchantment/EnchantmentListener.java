@@ -1,4 +1,4 @@
-package xyz.holocons.mc.holoitemsrevamp.ability;
+package com.strangeone101.holoitemsapi.enchantment;
 
 import org.bukkit.Material;
 import org.bukkit.entity.ThrowableProjectile;
@@ -11,7 +11,7 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class AbilityListener implements Listener {
+public class EnchantmentListener implements Listener {
 
     /**
      * Handles BlockBreak enchantments.
@@ -23,8 +23,8 @@ public class AbilityListener implements Listener {
         final var itemStack = event.getPlayer().getInventory().getItemInMainHand();
 
         itemStack.getEnchantments().keySet().forEach(enchantment -> {
-            if (enchantment instanceof BlockBreak ability) {
-                ability.run(event, itemStack);
+            if (enchantment instanceof EnchantmentAbility ability) {
+                ability.onBlockBreak(event, itemStack);
             }
         });
     }
@@ -39,8 +39,8 @@ public class AbilityListener implements Listener {
         final var itemStack = event.getItemInHand();
 
         itemStack.getEnchantments().keySet().forEach(enchantment -> {
-            if (enchantment instanceof BlockPlace ability) {
-                ability.run(event, itemStack);
+            if (enchantment instanceof EnchantmentAbility ability) {
+                ability.onBlockPlace(event, itemStack);
             }
         });
     }
@@ -56,8 +56,8 @@ public class AbilityListener implements Listener {
 
         for (final var itemStack : playerInventory) {
             itemStack.getEnchantments().keySet().forEach(enchantment -> {
-                if (enchantment instanceof PlayerDeath ability) {
-                    ability.run(event, itemStack);
+                if (enchantment instanceof EnchantmentAbility ability) {
+                    ability.onPlayerDeath(event, itemStack);
                 }
             });
         }
@@ -80,8 +80,8 @@ public class AbilityListener implements Listener {
         };
 
         itemStack.getEnchantments().keySet().forEach(enchantment -> {
-            if (enchantment instanceof PlayerInteract ability) {
-                ability.run(event, itemStack);
+            if (enchantment instanceof EnchantmentAbility ability) {
+                ability.onPlayerInteract(event, itemStack);
             }
         });
     }
@@ -99,8 +99,8 @@ public class AbilityListener implements Listener {
         final var itemStack = throwableProjectile.getItem();
 
         itemStack.getEnchantments().keySet().forEach(enchantment -> {
-            if (enchantment instanceof ProjectileLaunch ability) {
-                ability.run(event, itemStack);
+            if (enchantment instanceof EnchantmentAbility ability) {
+                ability.onProjectileLaunch(event, itemStack);
             }
         });
     }

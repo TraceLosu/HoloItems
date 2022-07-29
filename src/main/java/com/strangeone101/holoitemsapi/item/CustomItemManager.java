@@ -16,6 +16,7 @@ public class CustomItemManager {
     private static final int INVALID_ID = 404;
 
     private static final Map<String, CustomItem> CUSTOM_ITEMS = new HashMap<>();
+    private static final Map<Short, BlockAbility> CUSTOM_BLOCKS = new HashMap<>();
 
     /**
      * Register a custom item
@@ -29,6 +30,12 @@ public class CustomItemManager {
 
             NEXT_ID++;
             if (NEXT_ID == INVALID_ID) NEXT_ID++;
+        }
+
+        if (item instanceof BlockAbility ability) {
+            if (CUSTOM_BLOCKS.containsKey(ability.getIdentifier()))
+                throw new IllegalArgumentException("Identifier " + ability.getIdentifier() + " has already been registered!");
+            CUSTOM_BLOCKS.put(ability.getIdentifier(), ability);
         }
     }
 
@@ -63,6 +70,10 @@ public class CustomItemManager {
             return getCustomItem(id);
         }
         return null;
+    }
+
+    public static BlockAbility getCustomBlock(short identifier) {
+        return CUSTOM_BLOCKS.get(identifier);
     }
 
     /**

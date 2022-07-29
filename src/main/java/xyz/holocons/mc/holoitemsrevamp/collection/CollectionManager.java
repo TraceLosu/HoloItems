@@ -1,12 +1,6 @@
 package xyz.holocons.mc.holoitemsrevamp.collection;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import com.strangeone101.holoitemsapi.item.CustomItem;
-
 import xyz.holocons.mc.holoitemsrevamp.HoloItemsRevamp;
 import xyz.holocons.mc.holoitemsrevamp.collection.en1.EN1Collection;
 import xyz.holocons.mc.holoitemsrevamp.collection.en1.GawrGura;
@@ -88,9 +82,15 @@ import xyz.holocons.mc.holoitemsrevamp.collection.stars2.YukokuRoberu;
 import xyz.holocons.mc.holoitemsrevamp.collection.stars3.AragamiOga;
 import xyz.holocons.mc.holoitemsrevamp.collection.stars3.KageyamaShien;
 import xyz.holocons.mc.holoitemsrevamp.collection.stars3.Stars3Collection;
+import xyz.holocons.mc.holoitemsrevamp.item.DummyBlockBlock;
 import xyz.holocons.mc.holoitemsrevamp.item.MagnetBook;
 import xyz.holocons.mc.holoitemsrevamp.item.MementoItem;
 import xyz.holocons.mc.holoitemsrevamp.item.TideRiderItem;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class CollectionManager {
 
@@ -202,7 +202,9 @@ public class CollectionManager {
         var ollie = new KureijiOllie();
         var reine = new PavoliaReine();
 
-        var achan = new Achan();
+        var achan = new Achan(
+            new DummyBlockBlock(plugin)
+        );
 
         var aruran = new Arurandeisu();
         var miyabi = new HanasakiMiyabi();

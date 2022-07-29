@@ -1,5 +1,11 @@
 package xyz.holocons.mc.holoitemsrevamp.enchantment;
 
+import com.strangeone101.holoitemsapi.enchantment.CustomEnchantment;
+import com.strangeone101.holoitemsapi.enchantment.EnchantmentAbility;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -12,18 +18,10 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-
-import com.strangeone101.holoitemsapi.enchantment.CustomEnchantment;
-
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import xyz.holocons.mc.holoitemsrevamp.HoloItemsRevamp;
-import xyz.holocons.mc.holoitemsrevamp.ability.PlayerInteract;
-import xyz.holocons.mc.holoitemsrevamp.ability.ProjectileLaunch;
 import xyz.holocons.mc.holoitemsrevamp.integration.Integrations;
 
-public class TideRider extends CustomEnchantment implements PlayerInteract, ProjectileLaunch {
+public class TideRider extends CustomEnchantment implements EnchantmentAbility {
 
     private final HoloItemsRevamp plugin;
 
@@ -59,7 +57,7 @@ public class TideRider extends CustomEnchantment implements PlayerInteract, Proj
     }
 
     @Override
-    public void run(PlayerInteractEvent event, ItemStack itemStack) {
+    public void onPlayerInteract(PlayerInteractEvent event, ItemStack itemStack) {
         final var player = event.getPlayer();
         final var world = player.getWorld();
 
@@ -137,7 +135,7 @@ public class TideRider extends CustomEnchantment implements PlayerInteract, Proj
     }
 
     @Override
-    public void run(ProjectileLaunchEvent event, ItemStack itemStack) {
+    public void onProjectileLaunch(ProjectileLaunchEvent event, ItemStack itemStack) {
         event.setCancelled(true);
     }
 }
