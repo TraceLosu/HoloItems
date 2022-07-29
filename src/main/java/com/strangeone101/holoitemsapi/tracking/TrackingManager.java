@@ -1,121 +1,90 @@
 package com.strangeone101.holoitemsapi.tracking;
 
-import com.google.gson.stream.JsonToken;
 import com.strangeone101.holoitemsapi.item.BlockAbility;
+
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import xyz.holocons.mc.holoitemsrevamp.HoloItemsRevamp;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Map;
-import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
- * Big shoutout to Flo0 (a.k.a 7Smiley7 on Spigot) for giving permission on copying the concept of tracking blocks.
- * @see <a href="https://www.spigotmc.org/threads/tracking-blocks-that-were-placed-by-players.500216/">Resource thread</a>
+ * Shoutout to Flo0 (a.k.a 7Smiley7 on Spigot) for sharing the block tracking
+ * concept which initially guided the design of our own system.
+ * 
+ * @see <a href=
+ *      "https://www.spigotmc.org/threads/tracking-blocks-that-were-placed-by-players.500216/">Resource
+ *      thread</a>
  */
 public class TrackingManager {
 
-    public static final String FILENAME = "worlds.json";
+    public static final String FILENAME = "blocks.json";
 
-    private final HoloItemsRevamp plugin;
-    private final Map<UUID, TrackedWorld> trackedWorldMap;
+    private final Logger logger;
+    private final File dataFolder;
+    private final Map<TrackedBlock, BlockAbility> trackedBlocks;
 
     public TrackingManager(HoloItemsRevamp plugin) {
-        this.plugin = plugin;
-        this.trackedWorldMap = new Object2ObjectOpenHashMap<>();
+        this.logger = plugin.getLogger();
+        this.dataFolder = plugin.getDataFolder();
+        this.trackedBlocks = new Object2ObjectOpenHashMap<>();
     }
 
-    public void loadTrackedWorlds() {
-        final var loadedBukkitWorlds = Bukkit.getWorlds().stream().map(World::getUID).toList();
+    public void loadTrackedBlocks() {
+        final var file = new File(dataFolder, FILENAME);
+        if (!file.exists()) {
+            return;
+        }
+
+        if (!trackedBlocks.isEmpty()) {
+            throw new IllegalStateException("Block tracker already has data!");
+        }
+
+        final Map<TrackedBlock, BlockAbility> invalidBlocks = new Object2ObjectOpenHashMap<>();
 
         try {
-            final var file = new File(plugin.getDataFolder(), FILENAME);
-
-            if (!file.exists())
-                return;
-
-            if (!trackedWorldMap.isEmpty())
-                throw new IllegalStateException("Tracker already has data!");
-
             final var reader = new GsonReader(file);
-
-            if (reader.peek() == JsonToken.NULL) {
-                reader.close();
-                return;
-            }
-
-            reader.beginObject();
-            while (reader.hasNext()) {
-                final var uidString = reader.nextName();
-                final var trackedWorld = reader.nextTrackedWorld();
-
-                UUID worldUUID;
-                try {
-                    worldUUID = UUID.fromString(uidString);
-                } catch (IllegalArgumentException e) {
-                    worldUUID = null;
-                }
-
-                if (!loadedBukkitWorlds.contains(worldUUID)) {
-                    plugin.getLogger().warning("World with ID " + uidString +
-                        " does not exist! Storing in invalid worlds folder!");
-                    discardInvalidWorld(uidString, trackedWorld);
-                    continue;
-                }
-
-                trackedWorldMap.put(worldUUID, trackedWorld);
-            }
-            reader.endObject();
+            reader.readBlocks(trackedBlocks, invalidBlocks);
             reader.close();
         } catch (IOException e) {
+            final var invalidBlocksFolder = new File(dataFolder, "invalid-blocks");
+            invalidBlocksFolder.mkdir();
+
+            final var invalidBlocksFile = new File(invalidBlocksFolder, Instant.now().toString() + ".json");
+            file.renameTo(invalidBlocksFile);
             throw new RuntimeException(e);
         }
-    }
 
-    public void saveTrackedWorlds() {
-        try {
-            final var dataFolder = plugin.getDataFolder();
-            if (!dataFolder.isDirectory())
-                dataFolder.mkdir();
+        if (!invalidBlocks.isEmpty()) {
+            logger.warning("Invalid blocks will be discarded!");
 
-            final var file = new File(dataFolder, FILENAME);
-            final var writer = new GsonWriter(file);
+            final var invalidBlocksFolder = new File(dataFolder, "invalid-blocks");
+            invalidBlocksFolder.mkdir();
 
-            if (trackedWorldMap.isEmpty()) {
-                writer.nullValue();
+            final var invalidBlocksFile = new File(invalidBlocksFolder, Instant.now().toString() + ".json");
+
+            try {
+                final var writer = new GsonWriter(invalidBlocksFile);
+                writer.writeBlocks(invalidBlocks);
                 writer.close();
-                return;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-
-            writer.beginObject();
-            for (var entry : trackedWorldMap.entrySet()) {
-                writer.name(entry.getKey().toString());
-                writer.value(entry.getValue());
-            }
-            writer.endObject();
-            writer.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
-    private void discardInvalidWorld(final String worldId, final TrackedWorld trackedWorld) {
-        final var invalidWorldsFolder = new File(plugin.getDataFolder(), "invalid-worlds");
-        if (!invalidWorldsFolder.isDirectory())
-            invalidWorldsFolder.mkdir();
+    public void saveTrackedBlocks() {
+        dataFolder.mkdir();
+
+        final var file = new File(dataFolder, FILENAME);
 
         try {
-            final var file = new File(invalidWorldsFolder, worldId + ".json");
             final var writer = new GsonWriter(file);
-
-            writer.beginObject();
-            writer.name(worldId);
-            writer.value(trackedWorld);
-            writer.endObject();
+            writer.writeBlocks(trackedBlocks);
             writer.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -123,52 +92,24 @@ public class TrackingManager {
     }
 
     public void track(final Block block, final BlockAbility ability) {
-        var trackedWorld = getTrackedWorldOf(block);
-
-        if (trackedWorld == null)
-            trackedWorld = initWorld(block.getWorld());
-
-        trackedWorld.add(block, ability);
+        trackedBlocks.put(new TrackedBlock(block), ability);
     }
 
     public void untrack(final Block block) {
-        var trackedWorld = getTrackedWorldOf(block);
-        if (trackedWorld == null)
-            return;
-
-        trackedWorld.remove(block);
-
-        if (trackedWorld.isEmpty())
-            trackedWorldMap.remove(block.getWorld().getUID());
+        trackedBlocks.remove(new TrackedBlock(block));
     }
 
     public void move(final Block from, final Block to) {
-        var ability = getCustomBlock(from);
+        final var ability = getBlockAbility(from);
         untrack(from);
         track(to, ability);
     }
 
     public boolean isTracked(final Block block) {
-        var trackedWorld = getTrackedWorldOf(block);
-
-        if (trackedWorld == null)
-            return false;
-
-        return trackedWorld.isTracked(block);
+        return trackedBlocks.containsKey(new TrackedBlock(block));
     }
 
-    public BlockAbility getCustomBlock(final Block block) {
-        var trackedWorld = getTrackedWorldOf(block);
-        return trackedWorld.get(block);
-    }
-
-    private TrackedWorld initWorld(final World world) {
-        final var trackedWorld = new TrackedWorld(null);
-        trackedWorldMap.put(world.getUID(), trackedWorld);
-        return trackedWorld;
-    }
-
-    private TrackedWorld getTrackedWorldOf(final Block block) {
-        return trackedWorldMap.get(block.getWorld().getUID());
+    public BlockAbility getBlockAbility(final Block block) {
+        return trackedBlocks.get(new TrackedBlock(block));
     }
 }

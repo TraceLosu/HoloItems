@@ -37,7 +37,7 @@ public class BlockListener implements Listener {
             return;
         }
 
-        final var ability = plugin.getTrackingManager().getCustomBlock(event.getBlock());
+        final var ability = plugin.getTrackingManager().getBlockAbility(event.getBlock());
         ability.onBlockBreak(event, event.getBlock().getState());
     }
 
@@ -47,7 +47,7 @@ public class BlockListener implements Listener {
             return;
         }
 
-        final var ability = plugin.getTrackingManager().getCustomBlock(event.getBlock());
+        final var ability = plugin.getTrackingManager().getBlockAbility(event.getBlock());
         ability.onBlockDispense(event, event.getBlock().getState());
     }
 
@@ -58,7 +58,7 @@ public class BlockListener implements Listener {
             return;
         }
 
-        final var ability = plugin.getTrackingManager().getCustomBlock(blockInventoryHolder.getBlock());
+        final var ability = plugin.getTrackingManager().getBlockAbility(blockInventoryHolder.getBlock());
         ability.onInventoryClose(event, blockInventoryHolder.getBlock().getState());
     }
 
@@ -68,6 +68,6 @@ public class BlockListener implements Listener {
                 .getTileEntities(block -> plugin.getTrackingManager().isTracked(block), true);
 
         blockStates.forEach(blockState -> plugin.getTrackingManager()
-                .getCustomBlock(blockState.getBlock()).onPlayerChunkLoad(event, blockState));
+                .getBlockAbility(blockState.getBlock()).onPlayerChunkLoad(event, blockState));
     }
 }

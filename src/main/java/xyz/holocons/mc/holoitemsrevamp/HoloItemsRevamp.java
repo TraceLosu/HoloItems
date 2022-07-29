@@ -35,7 +35,7 @@ public final class HoloItemsRevamp extends JavaPlugin {
     public void onEnable() {
         Integrations.onEnable();
 
-        trackingManager.loadTrackedWorlds();
+        trackingManager.loadTrackedBlocks();
 
         getServer().getPluginManager().registerEvents(new EnchantmentListener(), this);
         getServer().getPluginManager().registerEvents(new AnvilListener(this), this);
@@ -49,7 +49,7 @@ public final class HoloItemsRevamp extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        trackingManager.saveTrackedWorlds();
+        trackingManager.saveTrackedBlocks();
     }
 
     public CollectionManager getCollectionManager() {
