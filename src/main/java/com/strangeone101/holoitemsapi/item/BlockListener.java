@@ -9,15 +9,17 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.BlockInventoryHolder;
 
+import com.strangeone101.holoitemsapi.tracking.TrackingManager;
+
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import xyz.holocons.mc.holoitemsrevamp.HoloItemsRevamp;
 
 public class BlockListener implements Listener {
 
-    private final HoloItemsRevamp plugin;
+    private final TrackingManager trackingManager;
 
     public BlockListener(HoloItemsRevamp plugin) {
-        this.plugin = plugin;
+        this.trackingManager = plugin.getTrackingManager();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -33,41 +35,38 @@ public class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (!plugin.getTrackingManager().isTracked(event.getBlock())) {
+        if (!trackingManager.isTracked(event.getBlock())) {
             return;
         }
 
-        final var ability = plugin.getTrackingManager().getBlockAbility(event.getBlock());
-        ability.onBlockBreak(event, event.getBlock().getState());
+        trackingManager.getBlockAbility(event.getBlock())
+                .onBlockBreak(event, event.getBlock().getState());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockDispense(BlockDispenseEvent event) {
-        if (!plugin.getTrackingManager().isTracked(event.getBlock())) {
+        if (!trackingManager.isTracked(event.getBlock())) {
             return;
         }
 
-        final var ability = plugin.getTrackingManager().getBlockAbility(event.getBlock());
-        ability.onBlockDispense(event, event.getBlock().getState());
+        trackingManager.getBlockAbility(event.getBlock())
+                .onBlockDispense(event, event.getBlock().getState());
     }
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         if (!(event.getInventory().getHolder(true) instanceof BlockInventoryHolder blockInventoryHolder)
-                || !plugin.getTrackingManager().isTracked(blockInventoryHolder.getBlock())) {
+                || !trackingManager.isTracked(blockInventoryHolder.getBlock())) {
             return;
         }
 
-        final var ability = plugin.getTrackingManager().getBlockAbility(blockInventoryHolder.getBlock());
-        ability.onInventoryClose(event, blockInventoryHolder.getBlock().getState());
+        trackingManager.getBlockAbility(blockInventoryHolder.getBlock())
+                .onInventoryClose(event, blockInventoryHolder.getBlock().getState());
     }
 
     @EventHandler
     public void onPlayerChunkLoad(PlayerChunkLoadEvent event) {
-        final var blockStates = event.getChunk()
-                .getTileEntities(block -> plugin.getTrackingManager().isTracked(block), true);
-
-        blockStates.forEach(blockState -> plugin.getTrackingManager()
-                .getBlockAbility(blockState.getBlock()).onPlayerChunkLoad(event, blockState));
+        trackingManager.getTrackedBlocks(event.getWorld().getUID(), event.getChunk().getChunkKey())
+                .forEach(entry -> entry.getValue().onPlayerChunkLoad(event, entry.getKey().blockState()));
     }
 }

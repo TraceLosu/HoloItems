@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 
 public record TrackedBlock(UUID worldKey, int x, int y, int z) {
 
@@ -39,6 +40,10 @@ public record TrackedBlock(UUID worldKey, int x, int y, int z) {
 
     public Block block() {
         return world().getBlockAt(x, y, z);
+    }
+
+    public BlockState blockState() {
+        return world().getBlockState(x, y, z);
     }
 
     @Override
